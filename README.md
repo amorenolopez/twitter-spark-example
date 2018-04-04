@@ -5,3 +5,8 @@
 Example to stream twitter using Apache Spark Streaming
 
 # How to use?
+Necessary settings to execute:
+->Consumer key
+->Consumer secret
+->Access token
+->Access token secret
