@@ -1,38 +1,50 @@
 package com.bigeek.twitter
 
-import org.apache.spark.sql.SparkSession
+import twitter4j.auth.OAuthAuthorization
+import twitter4j.conf.ConfigurationBuilder
+
+import org.apache.spark.SparkConf
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.twitter.TwitterUtils
+
+
 
 object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val testSeq = Seq("asda asas da", "sada as dasd ada da", "asd as das as da asd")
-
-
     val runLocal = args.length > 0 && args(args.length-1).equals("L")
-    var spark: SparkSession = null
+
+    var conf : SparkConf = new SparkConf()
 
     if (runLocal) {
-      spark = SparkSession
-        .builder()
-        .appName("WordCount")
-        .master("local[*]")
-        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-        .config("spark.broadcast.compress", "false")
-        .config("spark.shuffle.compress", "false")
-        .config("spark.shuffle.spill.compress", "false")
-        .enableHiveSupport()
-        .getOrCreate()
+      conf = conf
+        .setAppName("twitter-spark-example")
+        .setMaster("local[*]")
+
     } else {
-      spark = SparkSession
-        .builder()
-        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-        .appName("WordCount")
-        .enableHiveSupport()
-        .getOrCreate()
+      conf = conf
+        .setAppName("twitter-spark-example")
     }
 
-    spark.close()
+    var ssc: StreamingContext = new StreamingContext(conf, Seconds(15))
+
+    // Setting access token for twitter API
+    val cb = new ConfigurationBuilder
+    cb.setDebugEnabled(true).setOAuthConsumerKey("")
+      .setOAuthConsumerSecret("")
+      .setOAuthAccessToken("")
+      .setOAuthAccessTokenSecret("")
+
+    val auth = new OAuthAuthorization(cb.build)
+    val tweets = TwitterUtils.createStream(ssc, Some(auth))
+
+    // scalastyle:off
+    tweets.print()
+    // scalastyle:on
+
+    ssc.start()
+    ssc.awaitTermination()
 
   }
 
