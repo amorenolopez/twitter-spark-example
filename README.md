@@ -3,3 +3,5 @@
 # twitter-spark-example
 
 Example to stream twitter using Apache Spark Streaming
+
+# How to use?

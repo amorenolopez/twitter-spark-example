@@ -31,10 +31,10 @@ object Main {
 
     // Setting access token for twitter API
     val cb = new ConfigurationBuilder
-    cb.setDebugEnabled(true).setOAuthConsumerKey("")
-      .setOAuthConsumerSecret("")
-      .setOAuthAccessToken("")
-      .setOAuthAccessTokenSecret("")
+    cb.setDebugEnabled(true).setOAuthConsumerKey(System.getenv("CONSUMER_KEY"))
+      .setOAuthConsumerSecret(System.getenv("CONSUMER_SECRET"))
+      .setOAuthAccessToken(System.getenv("TOKEN_ACCESS"))
+      .setOAuthAccessTokenSecret(System.getenv("TOKEN_SECRET"))
 
     val auth = new OAuthAuthorization(cb.build)
     val tweets = TwitterUtils.createStream(ssc, Some(auth))
