@@ -1,4 +1,4 @@
-[![buildstatus](https://travis-ci.org/jdelarosa91/twitter-spark-example.svg?branch=master)](https://travis-ci.org/jdelarosa91/twitter-spark-example)
+[![buildstatus](https://travis-ci.org/amorenolopez/twitter-spark-example.svg?branch=master)](https://travis-ci.org/amorenolopez/twitter-spark-example)
 
 # twitter-spark-example
 
