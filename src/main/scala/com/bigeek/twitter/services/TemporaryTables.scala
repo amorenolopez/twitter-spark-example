@@ -17,4 +17,3 @@ case class TemporaryTables (spark: SparkSession) {
       .foreachRDD{rdd => rdd.toDF().createOrReplaceTempView(MapTable.TABLE_NAME)}
   }
 }
-
