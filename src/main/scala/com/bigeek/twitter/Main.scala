@@ -40,7 +40,7 @@ object Main {
           .getOrCreate()
       }
 
-    var ssc: StreamingContext = new StreamingContext(spark.sparkContext, Seconds(15))
+    var ssc: StreamingContext = new StreamingContext(spark.sparkContext, Seconds(10))
 
     // Setting access token for twitter API
     val cb = new ConfigurationBuilder
@@ -50,15 +50,13 @@ object Main {
       .setOAuthAccessTokenSecret(System.getenv("TOKEN_SECRET"))
 
     val auth = new OAuthAuthorization(cb.build)
-    val tweet = TwitterUtils.createStream(ssc, Some(auth))
+    val tweets = TwitterUtils.createStream(ssc, Some(auth))
+
+    val tweetsWindow = tweets.window(Seconds(30))
 
     val temporalyTables = TemporaryTables(spark)
 
-    spark.sqlContext.sql("select * from MAP_TABLE").show()
-    // scalastyle:off
-    tweet.print()
-    // scalastyle:on
-
+    temporalyTables.createMapTable(tweetsWindow)
 
     ssc.start()
     ssc.awaitTermination()
